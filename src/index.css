@@ -1,0 +1,150 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Light Theme — Crisp Off-White & Deep Forest Emerald (60-30-10) */
+  --bg-canvas: #F8F9F7;
+  --bg-surface: #FFFFFF;
+  --bg-surface-subtle: #F2F4F0;
+  --bg-surface-elevated: #FFFFFF;
+  --bg-sidebar: #F4F6F3;
+  --bg-input: #FFFFFF;
+  --bg-overlay: rgba(15, 23, 20, 0.45);
+
+  --text-primary: #141A17;
+  --text-secondary: #4B5751;
+  --text-muted: #6C7872;
+  --text-inverse: #F8FAF8;
+
+  --border-hairline: #E3E7E1;
+  --border-strong: #CDD4CA;
+
+  --brand-primary: #0F5132;
+  --brand-primary-hover: #0B3F27;
+  --brand-primary-soft: #E9F3ED;
+  --brand-primary-text: #0C462B;
+
+  --status-success-bg: #E8F5EE;
+  --status-success-text: #0F5E38;
+  --status-warning-bg: #FEF4E2;
+  --status-warning-text: #9A5B06;
+  --status-danger-bg: #FDECEC;
+  --status-danger-text: #B42318;
+  --status-info-bg: #EAF2FE;
+  --status-info-text: #175CD3;
+
+  --chart-grid: #E3E7E1;
+  --chart-axis: #6C7872;
+  --chart-primary: #0F5132;
+  --chart-secondary: #2F855A;
+  --chart-accent: #C9821E;
+  --chart-danger: #C53030;
+
+  --shadow-card: 0 1px 2px rgba(16, 24, 20, 0.04), 0 1px 1px rgba(16, 24, 20, 0.02);
+  --shadow-elevated: 0 12px 32px rgba(16, 24, 20, 0.08), 0 2px 6px rgba(16, 24, 20, 0.04);
+}
+
+.dark {
+  /* Dark Theme — Layered Forest Charcoal Surfaces (never flat pure black) */
+  --bg-canvas: #0E1311;
+  --bg-surface: #151C19;
+  --bg-surface-subtle: #1B2420;
+  --bg-surface-elevated: #202B26;
+  --bg-sidebar: #111815;
+  --bg-input: #141B18;
+  --bg-overlay: rgba(5, 8, 7, 0.72);
+
+  --text-primary: #EEF2EF;
+  --text-secondary: #B1BDB7;
+  --text-muted: #84938C;
+  --text-inverse: #0E1311;
+
+  --border-hairline: #24302A;
+  --border-strong: #32423A;
+
+  --brand-primary: #228B57;
+  --brand-primary-hover: #2AA367;
+  --brand-primary-soft: rgba(34, 139, 87, 0.16);
+  --brand-primary-text: #6EE7A8;
+
+  --status-success-bg: rgba(34, 139, 87, 0.16);
+  --status-success-text: #6EE7A8;
+  --status-warning-bg: rgba(217, 119, 6, 0.18);
+  --status-warning-text: #FCD34D;
+  --status-danger-bg: rgba(220, 38, 38, 0.18);
+  --status-danger-text: #FCA5A5;
+  --status-info-bg: rgba(59, 130, 246, 0.18);
+  --status-info-text: #93C5FD;
+
+  --chart-grid: #24302A;
+  --chart-axis: #8FA098;
+  --chart-primary: #34D399;
+  --chart-secondary: #60A5FA;
+  --chart-accent: #FBBF24;
+  --chart-danger: #F87171;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+html {
+  font-family: var(--font-body);
+  scroll-behavior: smooth;
+}
+
+.dark body {
+  letter-spacing: 0.008em;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Smooth theme transition on interactive surfaces */
+body, header, nav, aside, main, section, footer, input, select, textarea, button {
+  transition-property: background-color, border-color, color;
+  transition-duration: 160ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessible focus ring */
+:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* Subtle custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}

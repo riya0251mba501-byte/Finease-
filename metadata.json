@@ -1,0 +1,8 @@
+{
+  "name": "FinEase",
+  "description": "FinEase — Your Daily Essentials, All in One Place. Hyperlocal grocery and household essentials delivery in Dehradun, Uttarakhand.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

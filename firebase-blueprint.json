@@ -1,0 +1,400 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated user profile with PII isolated to owner and admin.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 24 },
+        "role": { "type": "string", "enum": ["customer", "owner", "store_manager", "delivery_partner"] },
+        "themePreference": { "type": "string", "enum": ["light", "dark", "system"] },
+        "locality": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "role", "themePreference", "createdAt", "updatedAt"]
+    },
+    "StaffRole": {
+      "title": "StaffRole",
+      "description": "Trusted privileged role record managed exclusively by Owner/Super Admin.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "role": { "type": "string", "enum": ["owner", "store_manager", "delivery_partner"] },
+        "isActive": { "type": "boolean" },
+        "assignedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "isActive", "assignedBy", "createdAt", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Database-driven grocery product category.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 80, "pattern": "^[a-z0-9\\-]+$" },
+        "description": { "type": "string", "maxLength": 300 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "sortOrder": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "slug", "imageUrl", "sortOrder", "isActive", "createdAt", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Grocery or daily essential catalog item with inventory tracking.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "categoryName": { "type": "string", "maxLength": 80 },
+        "sku": { "type": "string", "minLength": 2, "maxLength": 48, "pattern": "^[A-Z0-9\\-]+$" },
+        "price": { "type": "number" },
+        "discountPrice": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "stock": { "type": "number" },
+        "minStockThreshold": { "type": "number" },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "isFeatured": { "type": "boolean" },
+        "isBestSeller": { "type": "boolean" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "description", "categoryId", "categoryName", "sku", "price", "unit", "stock", "minStockThreshold", "imageUrl", "isFeatured", "isBestSeller", "isActive", "createdAt", "updatedAt"]
+    },
+    "Cart": {
+      "title": "Cart",
+      "description": "Persistent shopping cart owned by a signed-in customer.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "items": { "type": "array" },
+        "couponCode": { "type": "string", "maxLength": 32 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "items", "updatedAt"]
+    },
+    "Address": {
+      "title": "Address",
+      "description": "Protected customer delivery address in Dehradun.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "recipientName": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "phone": { "type": "string", "minLength": 10, "maxLength": 20 },
+        "line1": { "type": "string", "minLength": 4, "maxLength": 200 },
+        "landmark": { "type": "string", "maxLength": 120 },
+        "locality": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "city": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "pincode": { "type": "string", "pattern": "^[0-9]{6}$" },
+        "isDefault": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "label", "recipientName", "phone", "line1", "locality", "city", "pincode", "isDefault", "createdAt", "updatedAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Cash-on-Delivery customer order with lifecycle tracking and delivery assignment.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "orderNumber": { "type": "string", "minLength": 4, "maxLength": 32 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "customerEmail": { "type": "string", "format": "email", "maxLength": 200 },
+        "customerPhone": { "type": "string", "minLength": 10, "maxLength": 20 },
+        "deliveryAddress": { "type": "object" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "discountAmount": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "couponCode": { "type": "string", "maxLength": 32 },
+        "paymentMethod": { "type": "string", "enum": ["COD"] },
+        "paymentStatus": { "type": "string", "enum": ["pending", "collected", "void"] },
+        "status": { "type": "string", "enum": ["placed", "confirmed", "preparing", "ready_for_pickup", "assigned", "out_for_delivery", "delivered", "cancelled"] },
+        "deliveryStatus": { "type": "string", "enum": ["unassigned", "assigned", "accepted", "picked_up", "out_for_delivery", "delivered", "cancelled"] },
+        "assignedPartnerId": { "type": "string", "maxLength": 128 },
+        "assignedPartnerName": { "type": "string", "maxLength": 120 },
+        "pickingChecklist": { "type": "array" },
+        "statusHistory": { "type": "array" },
+        "notes": { "type": "string", "maxLength": 400 },
+        "idempotencyKey": { "type": "string", "minLength": 8, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "orderNumber", "userId", "customerName", "customerEmail", "customerPhone", "deliveryAddress", "items", "subtotal", "discountAmount", "deliveryFee", "totalAmount", "paymentMethod", "paymentStatus", "status", "deliveryStatus", "statusHistory", "idempotencyKey", "createdAt", "updatedAt"]
+    },
+    "InventoryLog": {
+      "title": "InventoryLog",
+      "description": "Immutable record of stock adjustments, replenishments, and order deductions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "productName": { "type": "string", "maxLength": 140 },
+        "sku": { "type": "string", "maxLength": 48 },
+        "changeType": { "type": "string", "enum": ["restock", "adjustment", "order_deduction", "order_restore", "spoilage"] },
+        "quantityDelta": { "type": "number" },
+        "previousStock": { "type": "number" },
+        "newStock": { "type": "number" },
+        "reason": { "type": "string", "minLength": 2, "maxLength": 300 },
+        "performedBy": { "type": "string", "maxLength": 128 },
+        "performedByName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "productId", "productName", "sku", "changeType", "quantityDelta", "previousStock", "newStock", "reason", "performedBy", "performedByName", "createdAt"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Local Dehradun / regional grocery supplier record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "contactPerson": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 24 },
+        "email": { "type": "string", "maxLength": 200 },
+        "address": { "type": "string", "maxLength": 240 },
+        "productsSupplied": { "type": "array" },
+        "notes": { "type": "string", "maxLength": 500 },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "contactPerson", "phone", "productsSupplied", "isActive", "createdAt", "updatedAt"]
+    },
+    "DeliveryPartner": {
+      "title": "DeliveryPartner",
+      "description": "Delivery partner profile managed by Owner/Super Admin.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "phone": { "type": "string", "minLength": 10, "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 200 },
+        "vehicleType": { "type": "string", "enum": ["scooter", "bike", "ev_cycle", "van"] },
+        "vehicleNumber": { "type": "string", "maxLength": 32 },
+        "zone": { "type": "string", "maxLength": 100 },
+        "isAvailable": { "type": "boolean" },
+        "isActive": { "type": "boolean" },
+        "completedDeliveries": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "phone", "vehicleType", "zone", "isAvailable", "isActive", "completedDeliveries", "createdAt", "updatedAt"]
+    },
+    "DeliveryAssignment": {
+      "title": "DeliveryAssignment",
+      "description": "Tracking record linking an order to a delivery partner.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "orderId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "orderNumber": { "type": "string", "maxLength": 32 },
+        "partnerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "partnerUserId": { "type": "string", "maxLength": 128 },
+        "partnerName": { "type": "string", "maxLength": 120 },
+        "status": { "type": "string", "enum": ["assigned", "accepted", "picked_up", "out_for_delivery", "delivered", "cancelled"] },
+        "assignedBy": { "type": "string", "maxLength": 128 },
+        "assignedAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "orderId", "orderNumber", "partnerId", "partnerName", "status", "assignedBy", "assignedAt", "updatedAt"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Promotional discount coupon with expiry and usage limits.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "code": { "type": "string", "minLength": 3, "maxLength": 32, "pattern": "^[A-Z0-9\\-_]+$" },
+        "description": { "type": "string", "maxLength": 240 },
+        "discountType": { "type": "string", "enum": ["percentage", "fixed"] },
+        "discountValue": { "type": "number" },
+        "maxDiscount": { "type": "number" },
+        "minOrderValue": { "type": "number" },
+        "usageLimit": { "type": "number" },
+        "usedCount": { "type": "number" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "code", "discountType", "discountValue", "minOrderValue", "usageLimit", "usedCount", "expiresAt", "isActive", "createdAt", "updatedAt"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Customer support ticket tracked through resolution.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "ticketNumber": { "type": "string", "maxLength": 32 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "customerName": { "type": "string", "maxLength": 120 },
+        "customerEmail": { "type": "string", "maxLength": 200 },
+        "orderId": { "type": "string", "maxLength": 128 },
+        "subject": { "type": "string", "minLength": 3, "maxLength": 160 },
+        "category": { "type": "string", "enum": ["order", "delivery", "quality", "account", "other"] },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "urgent"] },
+        "status": { "type": "string", "enum": ["open", "in_progress", "resolved", "closed"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "ticketNumber", "userId", "customerName", "customerEmail", "subject", "category", "priority", "status", "createdAt", "updatedAt"]
+    },
+    "SupportMessage": {
+      "title": "SupportMessage",
+      "description": "Message inside a support ticket conversation thread.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "ticketId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "ticketOwnerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "senderId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "senderName": { "type": "string", "maxLength": 120 },
+        "senderRole": { "type": "string", "enum": ["customer", "owner", "store_manager"] },
+        "body": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "ticketId", "ticketOwnerId", "senderId", "senderName", "senderRole", "body", "createdAt"]
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Operational business expense recorded by Owner/Super Admin.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "category": { "type": "string", "enum": ["inventory_procurement", "delivery_payout", "store_rent", "utilities", "packaging", "marketing", "staff_salary", "other"] },
+        "amount": { "type": "number" },
+        "expenseDate": { "type": "string", "maxLength": 32 },
+        "notes": { "type": "string", "maxLength": 400 },
+        "recordedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "category", "amount", "expenseDate", "recordedBy", "createdAt"]
+    },
+    "PlatformSettings": {
+      "title": "PlatformSettings",
+      "description": "Global FinEase operational configuration for Dehradun delivery.",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string", "maxLength": 80 },
+        "city": { "type": "string", "maxLength": 80 },
+        "supportPhone": { "type": "string", "maxLength": 24 },
+        "supportEmail": { "type": "string", "maxLength": 200 },
+        "deliveryFee": { "type": "number" },
+        "freeDeliveryThreshold": { "type": "number" },
+        "minOrderAmount": { "type": "number" },
+        "estimatedDeliveryMinutes": { "type": "number" },
+        "serviceableLocalities": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["storeName", "city", "deliveryFee", "freeDeliveryThreshold", "minOrderAmount", "estimatedDeliveryMinutes", "serviceableLocalities", "updatedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Append-only administrative activity log.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "actorId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "actorName": { "type": "string", "maxLength": 120 },
+        "actorRole": { "type": "string", "maxLength": 40 },
+        "action": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "targetType": { "type": "string", "maxLength": 60 },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "summary": { "type": "string", "maxLength": 400 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "actorId", "actorName", "actorRole", "action", "targetType", "targetId", "summary", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles (PII restricted to self or owner/admin)."
+    },
+    "/staff_roles/{userId}": {
+      "schema": { "$ref": "#/entities/StaffRole" },
+      "description": "Trusted privileged role assignments managed exclusively by Owner."
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Publicly readable grocery categories; writable by Owner."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Publicly readable grocery catalog; managed by Owner and stock-updated by Store Manager."
+    },
+    "/carts/{userId}": {
+      "schema": { "$ref": "#/entities/Cart" },
+      "description": "Private persistent shopping cart per customer."
+    },
+    "/addresses/{addressId}": {
+      "schema": { "$ref": "#/entities/Address" },
+      "description": "Protected customer delivery addresses."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Orders with strict role-gated workflow transitions."
+    },
+    "/inventory_logs/{logId}": {
+      "schema": { "$ref": "#/entities/InventoryLog" },
+      "description": "Immutable inventory movement history."
+    },
+    "/suppliers/{supplierId}": {
+      "schema": { "$ref": "#/entities/Supplier" },
+      "description": "Owner-managed supplier directory."
+    },
+    "/delivery_partners/{partnerId}": {
+      "schema": { "$ref": "#/entities/DeliveryPartner" },
+      "description": "Owner-managed delivery partner roster."
+    },
+    "/delivery_assignments/{assignmentId}": {
+      "schema": { "$ref": "#/entities/DeliveryAssignment" },
+      "description": "Delivery assignment tracking records."
+    },
+    "/coupons/{couponId}": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Promotional discount coupons."
+    },
+    "/support_tickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/SupportTicket" },
+      "description": "Customer support tickets."
+    },
+    "/support_tickets/{ticketId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/SupportMessage" },
+      "description": "Messages inside a support ticket (Master Gate checked on parent ticket)."
+    },
+    "/expenses/{expenseId}": {
+      "schema": { "$ref": "#/entities/Expense" },
+      "description": "Owner-only business expenses."
+    },
+    "/platform_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/PlatformSettings" },
+      "description": "Publicly readable store delivery settings; writable only by Owner."
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Append-only operational audit trail."
+    }
+  }
+}
